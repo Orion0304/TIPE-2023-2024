@@ -5,7 +5,6 @@ import wave
 message répétés tant qu'il y a du son
 lettres répétées nbrep fois"""
 
-fr="Sea.wav"
 
 def decodefaible(nbrep, nmfichier):
     f_r = open(nmfichier, "rb")
