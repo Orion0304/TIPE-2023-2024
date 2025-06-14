@@ -1,4 +1,4 @@
-from wave import *
+import wave
 
 fichier_entree = open("440.wav","rb")
 fichier_ecriture = open("440-1.wav","wb")
@@ -6,11 +6,7 @@ fichier_ecriture = open("440-1.wav","wb")
 print(Wave_read.getparams(fichier_entree))
 print(Wave_read.getnframes(fichier_entree))
 
-#récupération de l'en-tête du fichier WAV:
-#Wave_read.setpos(fichier_entree,0)
-#a= Wave_read.readframes(fichier_entree,20)
-
-#écriture des informations récupérées au-dessus:
+#écriture des informations de l'en-tête du fichier WAV:
 Wave_write.setparams(fichier_ecriture,Wave_read.getparams(fichier_entree))
 
 message='Coucou ceci est un test'
@@ -22,7 +18,7 @@ for j in range(Wave_read.getnframes(fichier_entree)):
     #print(a[1])
 
     if j< len(message):
-        for i in range(100):
+        for i in range(1000):
             a= Wave_read.readframes(fichier_entree,1)
             b=bytes([a[0],ord(message[j])])
             Wave_write.writeframes(fichier_ecriture,b)
@@ -35,9 +31,9 @@ Wave_write.close(fichier_ecriture)#enregistre et ferme le fichier une fois que l
 Wave_read.close(fichier_entree)#enregistre et ferme le fichier une fois que les informations sont écrites
 
 
-## Ici le programme recopie plusieurs fois de suite le même carcère, puis 'attend' plusieurs échantillons pui passe au caractère suivant:
+## Ici le programme recopie plusieurs fois de suite le même carcère, puis 'attend' plusieurs échantillons puis passe au caractère suivant:
 
-'''for j in range(Wave_read.getnframes(fichier_entree)):
+for j in range(Wave_read.getnframes(fichier_entree)):
 
     if j< len(message):
         for i in range(80):
@@ -55,4 +51,3 @@ Wave_read.close(fichier_entree)#enregistre et ferme le fichier une fois que les 
 
 Wave_write.close(fichier_ecriture)#enregistre et ferme le fichier une fois que les informations sont écrites
 Wave_read.close(fichier_entree)#enregistre et ferme le fichier une fois que les informations sont écrites
-'''
