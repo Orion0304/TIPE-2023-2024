@@ -1,6 +1,4 @@
-import wave
-
-fr="440.wav"
+from wave import *
 
 '''Octets de poids faible modifiés, message répété tant qu'il y a du son et chaque lettre du message est répétée nbrep fois.'''
 
