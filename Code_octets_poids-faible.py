@@ -1,72 +1,31 @@
-from wave import*
-import os
+import wave
+
+fr="440.wav"
+
+'''Octets de poids faible modifiés, message répété tant qu'il y a du son et chaque lettre du message est répétée nbrep fois.'''
 
 
+def codefaible(nbrep, nmfichier, message):
+    f_r = open(nmfichier, "rb")     #ouverture d'un fichier de lecture wave (fichier original)
+    f_w = open("440-1.wav", "wb")   #ouverture d'un fichier d'écriture wave
 
-##Ce programme effectue une modification des octet de poids faible de chaque échantillon:
+    Wave_write.setparams(f_w, Wave_read.getparams(f_r)) #écriture de l'en-tête du fichier modifié
 
-def modif_naif (fichier,message):
-    fileread = open (fichier,'rb')
-    nouveaufichier = open ('440-1.wav','wb')
-    #récupération des infos nécessaires :
-    infos= Wave_read.getparams(fileread)
-    n= infos[3]
-    #écriture de l'entete :
-    Wave_write.setparams(nouveaufichier,infos)
+    #nombre d'échantillons
+    n = Wave_read.getnframes(f_r)
 
-    for i in range (n):
-        longueur = len(message)
-        a= Wave_read.readframes(fileread,1)
+    #Codage 2 à 2 de la nouvelle séquence d'octets
+    k = 0
+    for k in range(n//(2*nbrep)): #n//2 doubles échantillons
+        lettre = message[k % len(message)]
+        for ite in range(nbrep):
+            seq = Wave_read.readframes(f_r, 2)  #lecture de 2 échantillons consécutifs
+            b = ord(lettre)
+            debut = bytes([(b//(2**3))*(2**3)])
+            fin = bytes([(b % (2**3))*(2**3)])
+            seq2 = (debut, bytes([seq[1]]), fin, bytes([seq[3]]))   #nouvelle séquence en laissant les octets de poids fort tel quel
+            for i in range(4):                                      #écriture de la séquence modifiée
+                Wave_write.writeframes(f_w, seq2[i])
 
-        if i<longueur :
-            b= bytes([ord(message[i]), a[1]])
-            Wave_write.writeframes(nouveaufichier,b)
-
-        Wave_write.writeframes(nouveaufichier,a)
-
-    Wave_read.close(fileread)
-    Wave_write.close(nouveaufichier)
-
-
-##Ce programme effectue une modification des octet de poids faible, en répétant le message autant de fois que possible dans le fichier:
-
-def modif_repMessage (fichier,message) :
-
-    fileread = open (fichier,'rb')
-    nouveaufichier = open ('440-1.wav','wb')
-    #récupération des infos nécessaires
-    infos= Wave_read.getparams(fileread)
-    n= infos[3]
-    #écriture de l'entete
-    Wave_write.setparams(nouveaufichier,infos)
-    for i in range (n):
-        longueur = len(message)
-        a= Wave_read.readframes(fileread,1)
-        b= bytes([ord(message[(i%longueur)]), a[1]])
-        Wave_write.writeframes(nouveaufichier,b)
-    Wave_read.close(fileread)
-    Wave_write.close(nouveaufichier)
-
-
-##Ce programme effectue une modification des octet de poids faible, en répétant le message autant de fois que possible dans le fichier et en répétant chaque caractère pour pouvoir l'indentifier à l'écoute du fichier modifié:
-
-def modif_repMessage_et_repLettre (fichier,message,rep):
-    fileread = open (fichier,'rb')
-    nouveaufichier = open ('440-1.wav','wb')
-    #récupération des infos nécessaires :
-    infos= Wave_read.getparams(fileread)
-    n= infos[3]
-    longueur = len(message)
-    #écriture de l'entête :
-    Wave_write.setparams(nouveaufichier,infos)
-    for i in range (n//rep):
-        for j in range (rep):
-            a= Wave_read.readframes(fileread,1)
-            b= bytes([ord(message[i%longueur]), a[1]])
-            Wave_write.writeframes(nouveaufichier,b)
-    for k in range(n%rep):
-        a= Wave_read.readframes(fileread,1)
-        Wave_write.writeframes(nouveaufichier,a)
-    Wave_read.close(fileread)
-    Wave_write.close(nouveaufichier)
-
+    Wave_read.close(f_r)    #fermeture du fichier de lecture
+    Wave_write.close(f_w)   #fermeture du fichier d'écriture
