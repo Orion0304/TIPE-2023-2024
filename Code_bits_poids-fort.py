@@ -1,8 +1,9 @@
 import wave
 
+'''Moitié forte des octets de poids faible modifiée, message répétés tant qu'il y a du son et chaque lettre du message est répétée nbrep fois.'''
+
 def codefort(nbrep, nmfichier, message):
     f_r = open(nmfichier, "rb")
-    #a = Wave_read.getsampwidth(f_r)
     f_w = open("440-1.wav", "wb") #ouverture d'un fichier d'écriture wave
 
 
