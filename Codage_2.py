@@ -1,4 +1,4 @@
-import wave
+from wave import *
 
 '''Moitié forte des octets de poids faible modifiée, message répétés tant qu'il y a du son et chaque lettre du message est répétée nbrep fois.'''
 
