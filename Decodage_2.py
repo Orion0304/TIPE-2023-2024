@@ -1,4 +1,4 @@
-import wave
+from wave import *
 
 def decodage_2(nbrep, nmfichier):
     f_r = open(nmfichier, "rb")
